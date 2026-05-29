@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>نور — Islamic Platform | Quran · Hadith (fawazahmed0) · Prayer · Qibla · Asma · Moon · Geo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.10);
+    --gold: #c9a84c;
+    --gold2: #e8c97e;
+    --teal: #3ecfb2;
+    --text: #e8e4d9;
+    --text2: #9a9486;
+    --error: #e05a5a;
+    --radius: 16px;
+    --shadow: 0 8px 40px rgba(0,0,0,0.6);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 100%, rgba(62,207,178,0.06) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 80% at 50% 50%, rgba(10,13,20,1) 40%, transparent 100%);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.04;
+    background-image: linear-gradient(rgba(201,168,76,0.5) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(201,168,76,0.5) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  #app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 16px 60px; }
+  header { text-align: center; padding: 48px 0 32px; position: relative; }
+  header::after { content: ''; display: block; width: 180px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 20px auto 0; }
+  .logo-arabic { font-family: 'Amiri', serif; font-size: clamp(48px, 10vw, 80px); color: var(--gold); line-height: 1; text-shadow: 0 0 40px rgba(201,168,76,0.3); }
+  .logo-sub { font-family: 'Cinzel Decorative', serif; font-size: clamp(11px, 2.5vw, 14px); letter-spacing: 0.35em; color: var(--text2); text-transform: uppercase; margin-top: 6px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 28px; }
+  .tab { background: var(--surface); border: 1px solid var(--border); color: var(--text2); padding: 9px 18px; border-radius: 50px; cursor: pointer; font-family: 'Lato', sans-serif; font-size: 13px; letter-spacing: 0.06em; transition: all 0.25s ease; white-space: nowrap; }
+  .tab:hover { border-color: var(--gold); color: var(--gold); }
+  .tab.active { background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.08)); border-color: var(--gold); color: var(--gold2); box-shadow: 0 0 20px rgba(201,168,76,0.15); }
+  .panel { display: none; animation: fadeIn 0.35s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; backdrop-filter: blur(12px); box-shadow: var(--shadow); transition: border-color 0.2s; }
+  .card:hover { border-color: rgba(201,168,76,0.25); }
+  .card-title { font-family: 'Cinzel Decorative', serif; font-size: 11px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); opacity: 0.3; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  input, select, textarea { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Lato', sans-serif; font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; flex: 1; min-width: 0; }
+  input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+  select option { background: #1a1d24; }
+  .btn { background: linear-gradient(135deg, var(--gold), #a8863a); border: none; border-radius: 10px; color: #0a0d14; cursor: pointer; font-family: 'Lato', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; padding: 10px 20px; transition: all 0.2s ease; white-space: nowrap; }
+  .btn:hover { filter: brightness(1.15); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,168,76,0.3); }
+  .btn-ghost { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text2); cursor: pointer; font-family: 'Lato', sans-serif; font-size: 13px; padding: 10px 20px; transition: all 0.2s; }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+  .btn-icon { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--teal); cursor: pointer; font-size: 14px; padding: 6px 10px; transition: all 0.2s; }
+  .btn-icon:hover { background: rgba(62,207,178,0.15); border-color: var(--teal); }
+  .badge { display: inline-block; background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); border-radius: 20px; color: var(--gold2); font-size: 11px; padding: 2px 10px; letter-spacing: 0.05em; }
+  .badge-teal { background: rgba(62,207,178,0.1); border-color: rgba(62,207,178,0.3); color: var(--teal); }
+  .badge-green { background: rgba(76,201,130,0.1); border-color: rgba(76,201,130,0.3); color: #4cc982; }
+  .badge-red { background: rgba(224,90,90,0.1); border-color: rgba(224,90,90,0.3); color: var(--error); }
+  .loader { text-align: center; padding: 40px; color: var(--text2); font-size: 13px; }
+  .spinner { display: inline-block; width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error-box { background: rgba(224,90,90,0.08); border: 1px solid rgba(224,90,90,0.25); border-radius: 10px; color: var(--error); font-size: 13px; padding: 12px 16px; margin-top: 12px; }
+  .verse-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  .verse-number { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.25); border-radius: 50%; font-size: 11px; color: var(--gold); font-weight: 700; margin-bottom: 12px; }
+  .arabic-text { font-family: 'Amiri', serif; font-size: 26px; line-height: 1.8; color: var(--text); text-align: right; direction: rtl; margin-bottom: 10px; word-spacing: 6px; }
+  .translation-text { font-size: 14px; line-height: 1.7; color: var(--text2); font-style: italic; }
+  .surah-header { text-align: center; padding: 20px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .surah-name-ar { font-family: 'Amiri', serif; font-size: 36px; color: var(--gold); direction: rtl; }
+  .bismillah { text-align: center; font-family: 'Amiri', serif; font-size: 28px; color: var(--gold); direction: rtl; padding: 16px 0; }
+  .hadith-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
+  .hadith-arabic { font-family: 'Amiri', serif; font-size: 20px; line-height: 1.8; color: var(--text); text-align: right; direction: rtl; margin: 10px 0; }
+  .hadith-translation { font-size: 14px; line-height: 1.7; color: var(--text2); margin: 8px 0; }
+  .hadith-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .prayer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-top: 16px; }
+  .prayer-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; text-align: center; padding: 16px 10px; transition: all 0.2s; }
+  .prayer-item.next { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+  .prayer-name { font-size: 11px; letter-spacing: 0.12em; color: var(--text2); text-transform: uppercase; margin-bottom: 6px; }
+  .prayer-time { font-size: 22px; font-weight: 300; color: var(--text); }
+  .hijri-date { text-align: center; font-size: 14px; color: var(--teal); margin-top: 14px; font-family: 'Amiri', serif; }
+  .qibla-compass { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+  .compass-ring { position: absolute; inset: 0; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .compass-ring::before { content: 'N'; position: absolute; top: 6px; font-size: 11px; font-weight: 700; color: var(--error); }
+  .compass-ring::after { content: 'S'; position: absolute; bottom: 6px; font-size: 11px; color: var(--text2); }
+  .compass-needle { position: absolute; width: 4px; height: 80px; left: 50%; top: 50%; transform-origin: bottom center; background: linear-gradient(180deg, var(--gold) 0%, transparent 100%); border-radius: 2px 2px 0 0; transform: translate(-50%, -100%) rotate(0deg); transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .compass-center { width: 12px; height: 12px; background: var(--gold); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .compass-e { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text2); }
+  .compass-w { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text2); }
+  .qibla-degrees { font-size: 42px; font-weight: 300; color: var(--gold); line-height: 1; }
+  .asma-card { text-align: center; padding: 40px 24px; }
+  .asma-arabic { font-family: 'Amiri', serif; font-size: 64px; color: var(--gold); direction: rtl; margin-bottom: 12px; }
+  .asma-number { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: rgba(201,168,76,0.1); border-radius: 50%; color: var(--gold); font-size: 14px; font-weight: 700; margin-bottom: 16px; }
+  .moon-display { text-align: center; padding: 24px; }
+  .moon-emoji { font-size: 80px; margin-bottom: 12px; filter: drop-shadow(0 0 20px rgba(201,168,76,0.3)); }
+  .moon-phase-name { font-family: 'Cinzel Decorative', serif; font-size: 18px; color: var(--gold2); }
+  .info-pair { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .coord-display { background: var(--surface2); border-radius: 10px; padding: 14px; font-family: monospace; font-size: 14px; color: var(--teal); text-align: center; margin-top: 12px; }
+  .sub-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .sub-tab { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; color: var(--text2); cursor: pointer; font-size: 11px; padding: 5px 12px; transition: all 0.2s; }
+  .sub-tab.active { background: rgba(62,207,178,0.1); border-color: var(--teal); color: var(--teal); }
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface2); border: 1px solid var(--gold); border-radius: 12px; color: var(--gold2); font-size: 13px; padding: 12px 20px; z-index: 999; backdrop-filter: blur(12px); animation: slideUp 0.3s ease; }
+  @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+  mark { background: rgba(201,168,76,0.35); color: var(--gold2); border-radius: 3px; padding: 0 2px; }
+  @media (max-width: 600px) { .prayer-grid { grid-template-columns: repeat(3, 1fr); } .arabic-text { font-size: 22px; } .asma-arabic { font-size: 48px; } }
+</style>
+</head>
+<body>
+<div class="bg-layer"></div><div class="bg-grid"></div>
+<div id="app">
+  <header><div class="logo-arabic">نور</div><div class="logo-sub">Islamic Platform</div></header>
+  <nav class="tabs">
+    <button class="tab active" onclick="showPanel('quran')">📖 Quran</button>
+    <button class="tab" onclick="showPanel('hadith')">🕊️ Hadith (fawazahmed0)</button>
+    <button class="tab" onclick="showPanel('prayer')">🕌 Prayer & Qibla</button>
+    <button class="tab" onclick="showPanel('asma')">✨ Asma Al-Husna</button>
+    <button class="tab" onclick="showPanel('moon')">🌙 Moon Phase</button>
+    <button class="tab" onclick="showPanel('geo')">🌍 Geo Info</button>
+  </nav>
+
+  <!-- Quran -->
+  <div id="panel-quran" class="panel active">
+    <div class="card"><div class="card-title">Browse Surah</div>
+      <div class="row"><select id="surahSelect"></select><select id="translationSelect"><option value="en.sahih">Sahih International</option><option value="en.pickthall">Pickthall</option><option value="en.yusufali">Yusuf Ali</option></select><button class="btn" onclick="loadSurah()">Load Surah</button></div>
+    </div>
+    <div class="card"><div class="card-title">Search Quran</div><div class="row"><input id="quranSearch" type="text" placeholder="English keyword..."/><button class="btn" onclick="searchQuran()">Search</button></div><div id="quranSearchResults"></div></div>
+    <div id="quranOutput"></div>
+  </div>
+
+  <!-- Hadith (fawazahmed0 API using raw JSON from GitHub/jsDelivr) -->
+  <div id="panel-hadith" class="panel">
+    <div class="card"><div class="card-title">Hadith Explorer — fawazahmed0/Hadith-API</div>
+      <div class="sub-tabs" id="collectionTabs">
+        <button class="sub-tab active" onclick="selectCollection('bukhari',this)">Bukhari</button>
+        <button class="sub-tab" onclick="selectCollection('muslim',this)">Muslim</button>
+        <button class="sub-tab" onclick="selectCollection('abudawud',this)">Abu Dawud</button>
+        <button class="sub-tab" onclick="selectCollection('tirmidhi',this)">Tirmidhi</button>
+        <button class="sub-tab" onclick="selectCollection('nasai',this)">Nasai</button>
+        <button class="sub-tab" onclick="selectCollection('ibnmajah',this)">Ibn Majah</button>
+      </div>
+      <div class="row"><input id="hadithSearch" type="text" placeholder="Search keyword (e.g. mercy, prayer)"/><button class="btn" onclick="searchHadith()">Search</button><button class="btn-ghost" onclick="randomHadith()">🎲 Random</button></div>
+      <div style="font-size:11px; color:var(--text2); margin-top:8px;">⚡ Using fawazahmed0's Hadith API (authentic collections, client‑side search)</div>
+    </div>
+    <div id="hadithOutput"></div>
+  </div>
+
+  <!-- Prayer + Qibla -->
+  <div id="panel-prayer" class="panel">
+    <div class="card"><div class="card-title">Prayer Times</div><div class="row"><input id="cityInput" value="Mecca"/><input id="countryInput" value="Saudi Arabia"/><button class="btn" onclick="getPrayerByCity()">Get Times</button><button class="btn-ghost" onclick="getPrayerByLocation()">📍 My Location</button></div></div>
+    <div id="prayerOutput"></div>
+    <div class="card"><div class="card-title">Qibla Direction</div><div class="row"><input id="qiblaLat" placeholder="Latitude"/><input id="qiblaLon" placeholder="Longitude"/><button class="btn" onclick="getQibla()">Calculate</button></div><div id="qiblaOutput"></div></div>
+  </div>
+
+  <!-- Asma Al-Husna (embedded static) -->
+  <div id="panel-asma" class="panel"><div class="card"><div class="card-title">99 Names of Allah</div><div style="text-align:center;margin-bottom:16px;"><button class="btn" onclick="loadRandomAsma()">ﷲ Show Random Name</button><button class="btn-ghost" style="margin-left:8px;" onclick="loadAllAsma()">Show All 99</button></div><div id="asmaOutput"></div></div></div>
+
+  <!-- Moon Phase -->
+  <div id="panel-moon" class="panel"><div class="card"><div class="card-title">Today's Moon Phase</div><div id="moonOutput"></div></div></div>
+
+  <!-- Geo Info (Nominatim OSM) -->
+  <div id="panel-geo" class="panel"><div class="card"><div class="card-title">Geo Information</div><div class="row"><input id="geoAddress" placeholder="Address (e.g. Medina, Saudi Arabia)"/><button class="btn" onclick="getGeo()">Get Coordinates</button></div><div id="geoOutput"></div></div></div>
+</div>
+<audio id="audioPlayer"></audio>
+<script>
+// =============================== UTILS ===============================
+function showToast(msg, dur=3000){ let t=document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),dur); }
+function loader(html=''){ return `<div class="loader"><div class="spinner"></div><br/>Loading…</div>`; }
+function errorBox(msg){ return `<div class="error-box">⚠️ ${msg}</div>`; }
+function gradeClass(grade){ if(!grade) return ''; const g=grade.toLowerCase(); if(g.includes('sahih')) return 'badge-green'; if(g.includes('hasan')) return 'badge-teal'; if(g.includes('daif')||g.includes('weak')) return 'badge-red'; return 'badge-teal'; }
+function highlight(text, kw){ if(!kw) return text; let re=new RegExp(`(${kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'); return text.replace(re,'<mark>$1</mark>'); }
+
+async function fetchWithRetry(url, retries=2, delay=800){ for(let i=0;i<=retries;i++){ try{ const res=await fetch(url,{signal:AbortSignal.timeout(12000)}); if(!res.ok) throw new Error(`HTTP ${res.status}`); return res; } catch(e){ if(i===retries) throw e; await new Promise(r=>setTimeout(r,delay*(i+1))); } } }
+
+function showPanel(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='moon') renderMoon();
+}
+
+// =============================== QURAN (AlQuran Cloud) ===============================
+let surahList=[];
+async function loadSurahList(){
+  try{ let res=await fetchWithRetry('https://api.alquran.cloud/v1/surah'); let data=await res.json(); surahList=data.data; let sel=document.getElementById('surahSelect'); surahList.forEach(s=>{let opt=document.createElement('option'); opt.value=s.number; opt.textContent=`${s.number}. ${s.englishName} — ${s.name}`; sel.appendChild(opt);}); } catch(e){ console.error(e);}
+}
+let currentAudio=document.getElementById('audioPlayer'),playingBtn=null;
+function playVerse(verseNum,url,btn){
+  if(playingBtn&&playingBtn!==btn){ playingBtn.textContent='▶'; playingBtn.classList.remove('playing'); }
+  if(currentAudio.src.includes(url)&&!currentAudio.paused){ currentAudio.pause(); btn.textContent='▶'; btn.classList.remove('playing'); playingBtn=null; return; }
+  currentAudio.src=url; currentAudio.play().then(()=>{ btn.textContent='⏸'; btn.classList.add('playing'); playingBtn=btn; }).catch(()=>showToast('Audio unavailable'));
+  currentAudio.onended=()=>{ btn.textContent='▶'; btn.classList.remove('playing'); playingBtn=null; };
+}
+async function loadSurah(){
+  let num=document.getElementById('surahSelect').value; let trans=document.getElementById('translationSelect').value;
+  if(!num){ showToast('Select surah'); return; }
+  let out=document.getElementById('quranOutput'); out.innerHTML=loader();
+  try{ let [arRes,trRes]=await Promise.all([fetchWithRetry(`https://api.alquran.cloud/v1/surah/${num}`), fetchWithRetry(`https://api.alquran.cloud/v1/surah/${num}/${trans}`)]);
+    let arData=await arRes.json(); let trData=await trRes.json(); let surah=arData.data; let verses=surah.ayahs; let tVerses=trData.data.ayahs;
+    let html=`<div class="card"><div class="surah-header"><div class="surah-name-ar">${surah.name}</div><div class="surah-meta">${surah.englishName} · ${surah.numberOfAyahs} verses</div></div>`;
+    if(surah.number!==9) html+=`<div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+    verses.forEach((v,i)=>{ let tr=tVerses[i]; let audioUrl=`https://cdn.islamic.network/quran/audio/128/ar.alafasy/${v.number}.mp3`;
+      html+=`<div class="verse-item"><div class="verse-number">${v.numberInSurah}</div><button class="btn-icon" id="play-${v.number}" onclick="playVerse(${v.number},'${audioUrl}',this)">▶</button><div class="arabic-text">${v.text}</div><div class="translation-text">${tr?tr.text:''}</div></div>`;
+    }); html+='</div>'; out.innerHTML=html;
+  }catch(e){ out.innerHTML=errorBox('Failed to load surah');}
+}
+async function searchQuran(){
+  let q=document.getElementById('quranSearch').value.trim(); if(!q) return;
+  let out=document.getElementById('quranSearchResults'); out.innerHTML=loader();
+  try{ let res=await fetchWithRetry(`https://api.alquran.cloud/v1/search/${encodeURIComponent(q)}/all/en`); let data=await res.json(); let matches=data.data?.matches||[];
+    if(!matches.length){ out.innerHTML=`<div>No results for "${q}"</div>`; return; }
+    let html=`<div class="results-count">${matches.length} results</div>`; matches.slice(0,25).forEach(m=>{ html+=`<div class="search-result-item"><div class="search-result-ref">${m.surah.englishName} — verse ${m.numberInSurah}</div><div class="translation-text">${highlight(m.text,q)}</div></div>`; });
+    out.innerHTML=html;
+  }catch(e){ out.innerHTML=errorBox('Search failed'); }
+}
+
+// =============================== HADITH (fawazahmed0/Hadith-API) ===============================
+// Using jsDelivr CDN for the raw JSON files (no API key, reliable CORS)
+// File structure: https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/eng-{collection}.min.json
+// and ara-{collection}.min.json for Arabic.
+let currentCollection = 'bukhari';
+let hadithCache = {}; // store { eng: data, ara: data }
+
+function selectCollection(name, el){
+  currentCollection = name;
+  document.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+async function fetchHadithData(collection, lang='eng') {
+  const cacheKey = `${lang}_${collection}`;
+  if (hadithCache[cacheKey]) return hadithCache[cacheKey];
+  const url = `https://cdn.jsdelivr.net/gh/fawazahmed0/hadith-api@1/editions/${lang}-${collection}.min.json`;
+  try {
+    const res = await fetchWithRetry(url);
+    const data = await res.json();
+    hadithCache[cacheKey] = data;
+    return data;
+  } catch(e) {
+    console.error(`Failed to load ${lang} ${collection}:`, e);
+    return null;
+  }
+}
+
+async function searchHadith() {
+  const keyword = document.getElementById('hadithSearch').value.trim().toLowerCase();
+  const out = document.getElementById('hadithOutput');
+  if (!keyword) { out.innerHTML = errorBox('Enter a keyword to search.'); return; }
+  out.innerHTML = loader();
+  try {
+    const [engData, araData] = await Promise.all([
+      fetchHadithData(currentCollection, 'eng'),
+      fetchHadithData(currentCollection, 'ara')
+    ]);
+    if (!engData || !engData.hadiths) throw new Error('No data for this collection');
+    const hadiths = engData.hadiths;
+    const arabicMap = araData?.hadiths || {};
+    const results = [];
+    for (let i = 0; i < hadiths.length; i++) {
+      const h = hadiths[i];
+      const text = (h.text || '').toLowerCase();
+      const ref = (h.reference || '').toLowerCase();
+      if (text.includes(keyword) || ref.includes(keyword)) {
+        results.push({ index: i, eng: h, arab: arabicMap[i] });
+      }
+      if (results.length >= 30) break;
+    }
+    if (results.length === 0) {
+      out.innerHTML = errorBox(`No hadith found for "${keyword}" in ${currentCollection}.`);
+      return;
+    }
+    let html = `<div class="card"><div class="results-count">${results.length} result(s) for "${keyword}"</div>`;
+    for (let r of results) {
+      const eng = r.eng;
+      const arabText = r.arab?.text || '';
+      const grade = eng.grade || '';
+      const narrator = eng.narrator || eng.narrators || '';
+      const reference = eng.reference || '';
+      html += `<div class="hadith-item">
+        <div class="hadith-meta">
+          ${reference ? `<span class="badge">📚 ${reference}</span>` : ''}
+          ${grade ? `<span class="badge ${gradeClass(grade)}">${grade}</span>` : ''}
+          ${narrator ? `<span class="badge badge-teal">👤 ${narrator}</span>` : ''}
+        </div>
+        ${arabText ? `<div class="hadith-arabic">${arabText}</div>` : ''}
+        <div class="hadith-translation">${highlight(eng.text, keyword)}</div>
+      </div>`;
+    }
+    html += '</div>';
+    out.innerHTML = html;
+  } catch(e) {
+    out.innerHTML = errorBox('Failed to load hadith. Please try again. ' + e.message);
+  }
+}
+
+async function randomHadith() {
+  const out = document.getElementById('hadithOutput');
+  out.innerHTML = loader();
+  try {
+    const [engData, araData] = await Promise.all([
+      fetchHadithData(currentCollection, 'eng'),
+      fetchHadithData(currentCollection, 'ara')
+    ]);
+    if (!engData || !engData.hadiths) throw new Error('No data');
+    const hadiths = engData.hadiths;
+    const arabicMap = araData?.hadiths || {};
+    const randomIndex = Math.floor(Math.random() * hadiths.length);
+    const eng = hadiths[randomIndex];
+    const arabText = arabicMap[randomIndex]?.text || '';
+    const grade = eng.grade || '';
+    const narrator = eng.narrator || eng.narrators || '';
+    const reference = eng.reference || '';
+    const html = `<div class="card">
+      <div class="hadith-item">
+        <div class="hadith-meta">
+          ${reference ? `<span class="badge">📚 ${reference}</span>` : ''}
+          ${grade ? `<span class="badge ${gradeClass(grade)}">${grade}</span>` : ''}
+          ${narrator ? `<span class="badge badge-teal">👤 ${narrator}</span>` : ''}
+        </div>
+        ${arabText ? `<div class="hadith-arabic">${arabText}</div>` : ''}
+        <div class="hadith-translation">${eng.text}</div>
+      </div>
+    </div>`;
+    out.innerHTML = html;
+  } catch(e) {
+    out.innerHTML = errorBox('Could not load random hadith: ' + e.message);
+  }
+}
+
+// =============================== PRAYER + QIBLA (Aladhan) ===============================
+async function getPrayerByCity(){
+  let city=document.getElementById('cityInput').value.trim(); let country=document.getElementById('countryInput').value.trim();
+  if(!city){ showToast('Enter city'); return; } let out=document.getElementById('prayerOutput'); out.innerHTML=loader();
+  try{ let res=await fetchWithRetry(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=2`); let data=await res.json();
+    if(data.code!==200) throw new Error(data.status); renderPrayer(data.data,`${city}, ${country}`);
+  }catch(e){ out.innerHTML=errorBox('Prayer times error: '+e.message); }
+}
+async function getPrayerByLocation(){
+  if(!navigator.geolocation){ showToast('Geolocation not supported'); return; }
+  let out=document.getElementById('prayerOutput'); out.innerHTML=loader();
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    let {latitude:lat,longitude:lon}=pos.coords; document.getElementById('qiblaLat').value=lat.toFixed(6); document.getElementById('qiblaLon').value=lon.toFixed(6);
+    try{ let res=await fetchWithRetry(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=2`); let data=await res.json(); if(data.code!==200) throw new Error(data.status); renderPrayer(data.data,`${lat.toFixed(2)}, ${lon.toFixed(2)}`); }
+    catch(e){ out.innerHTML=errorBox('Location prayer times failed'); }
+  },()=>{ out.innerHTML=errorBox('Location denied'); });
+}
+function renderPrayer(data,loc){
+  let timings=data.timings; let hijri=data.date.hijri; let now=new Date(); let nowMins=now.getHours()*60+now.getMinutes();
+  let prayers=[{name:'Fajr',key:'Fajr'},{name:'Sunrise',key:'Sunrise'},{name:'Dhuhr',key:'Dhuhr'},{name:'Asr',key:'Asr'},{name:'Maghrib',key:'Maghrib'},{name:'Isha',key:'Isha'}];
+  let nextIdx=-1; prayers.forEach((p,i)=>{ let [h,m]=timings[p.key].split(':').map(Number); let mins=h*60+m; if(nextIdx===-1 && mins>nowMins) nextIdx=i; });
+  let html=`<div class="card"><div class="card-title">${loc}</div><div class="prayer-grid">`;
+  prayers.forEach((p,i)=>{ let t=timings[p.key].substring(0,5); html+=`<div class="prayer-item ${i===nextIdx?'next':''}"><div class="prayer-name">${p.name}</div><div class="prayer-time">${t}</div></div>`; });
+  html+=`</div><div class="hijri-date">${hijri.day} ${hijri.month.en} ${hijri.year} AH · ${hijri.month.ar}</div></div>`;
+  document.getElementById('prayerOutput').innerHTML=html;
+}
+async function getQibla(){
+  let lat=parseFloat(document.getElementById('qiblaLat').value); let lon=parseFloat(document.getElementById('qiblaLon').value);
+  if(isNaN(lat)||isNaN(lon)){ showToast('Enter valid coordinates'); return; }
+  let out=document.getElementById('qiblaOutput'); out.innerHTML=loader();
+  try{ let res=await fetchWithRetry(`https://api.aladhan.com/v1/qibla/${lat}/${lon}`); let data=await res.json(); if(data.code!==200) throw new Error(data.status); let deg=data.data.direction;
+    let dirs=['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW','W','WNW','NW','NNW']; let card=dirs[Math.round(deg/22.5)%16];
+    let html=`<div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;margin-top:16px;"><div class="qibla-compass"><div class="compass-ring"><span class="compass-e">E</span><span class="compass-w">W</span><div class="compass-needle" id="compassNeedle"></div><div class="compass-center"></div></div></div><div class="qibla-info"><div class="qibla-degrees">${deg.toFixed(1)}°</div><div class="qibla-direction">${card} from North</div><div style="color:var(--gold2);font-family:'Amiri';margin-top:10px;">🕋 الكعبة</div></div></div>`;
+    out.innerHTML=html; setTimeout(()=>{ let n=document.getElementById('compassNeedle'); if(n) n.style.transform=`translate(-50%, -100%) rotate(${deg}deg)`; },100);
+  }catch(e){ out.innerHTML=errorBox('Qibla failed'); }
+}
+
+// =============================== ASMA AL-HUSNA (EMBEDDED STATIC JSON) ===============================
+const asmaNames = [
+  {number:1,name:"الرحمن",transliteration:"Ar-Rahman",meaning:"The Most Gracious"},
+  {number:2,name:"الرحيم",transliteration:"Ar-Rahim",meaning:"The Most Merciful"},
+  {number:3,name:"الملك",transliteration:"Al-Malik",meaning:"The Sovereign"},
+  {number:4,name:"القدوس",transliteration:"Al-Quddus",meaning:"The Holy"},
+  {number:5,name:"السلام",transliteration:"As-Salam",meaning:"The Peace"},
+  {number:6,name:"المؤمن",transliteration:"Al-Mu'min",meaning:"The Faithful"},
+  {number:7,name:"المهيمن",transliteration:"Al-Muhaymin",meaning:"The Guardian"},
+  {number:8,name:"العزيز",transliteration:"Al-Aziz",meaning:"The Almighty"},
+  {number:9,name:"الجبار",transliteration:"Al-Jabbar",meaning:"The Compeller"},
+  {number:10,name:"المتكبر",transliteration:"Al-Mutakabbir",meaning:"The Majestic"},
+  {number:11,name:"الخالق",transliteration:"Al-Khaliq",meaning:"The Creator"},
+  {number:12,name:"البارئ",transliteration:"Al-Bari'",meaning:"The Evolver"},
+  {number:13,name:"المصور",transliteration:"Al-Musawwir",meaning:"The Fashioner"},
+  {number:14,name:"الغفار",transliteration:"Al-Ghaffar",meaning:"The Forgiving"},
+  {number:15,name:"القهار",transliteration:"Al-Qahhar",meaning:"The Subduer"},
+  {number:16,name:"الوهاب",transliteration:"Al-Wahhab",meaning:"The Bestower"},
+  {number:17,name:"الرزاق",transliteration:"Ar-Razzaq",meaning:"The Provider"},
+  {number:18,name:"الفتاح",transliteration:"Al-Fattah",meaning:"The Opener"},
+  {number:19,name:"العليم",transliteration:"Al-Alim",meaning:"The All-Knowing"},
+  {number:20,name:"القابض",transliteration:"Al-Qabid",meaning:"The Restrainer"},
+  {number:21,name:"الباسط",transliteration:"Al-Basit",meaning:"The Expander"},
+  {number:22,name:"الخافض",transliteration:"Al-Khafid",meaning:"The Abaser"},
+  {number:23,name:"الرافع",transliteration:"Ar-Rafi'",meaning:"The Exalter"},
+  {number:24,name:"المعز",transliteration:"Al-Mu'izz",meaning:"The Honorer"},
+  {number:25,name:"المذل",transliteration:"Al-Mudhill",meaning:"The Dishonorer"},
+  {number:26,name:"السميع",transliteration:"As-Sami'",meaning:"The All-Hearing"},
+  {number:27,name:"البصير",transliteration:"Al-Basir",meaning:"The All-Seeing"},
+  {number:28,name:"الحكم",transliteration:"Al-Hakam",meaning:"The Judge"},
+  {number:29,name:"العدل",transliteration:"Al-'Adl",meaning:"The Just"},
+  {number:30,name:"اللطيف",transliteration:"Al-Latif",meaning:"The Subtle"},
+  {number:31,name:"الخبير",transliteration:"Al-Khabir",meaning:"The Aware"},
+  {number:32,name:"الحليم",transliteration:"Al-Halim",meaning:"The Forbearing"},
+  {number:33,name:"العظيم",transliteration:"Al-Azim",meaning:"The Magnificent"},
+  {number:34,name:"الغفور",transliteration:"Al-Ghafur",meaning:"The Forgiving"},
+  {number:35,name:"الشكور",transliteration:"Ash-Shakur",meaning:"The Appreciative"},
+  {number:36,name:"العلي",transliteration:"Al-'Aliyy",meaning:"The Most High"},
+  {number:37,name:"الكبير",transliteration:"Al-Kabir",meaning:"The Great"},
+  {number:38,name:"الحفيظ",transliteration:"Al-Hafiz",meaning:"The Preserver"},
+  {number:39,name:"المقيت",transliteration:"Al-Muqit",meaning:"The Sustainer"},
+  {number:40,name:"الحسيب",transliteration:"Al-Hasib",meaning:"The Reckoner"},
+  {number:41,name:"الجليل",transliteration:"Al-Jalil",meaning:"The Majestic"},
+  {number:42,name:"الكريم",transliteration:"Al-Karim",meaning:"The Generous"},
+  {number:43,name:"الرقيب",transliteration:"Ar-Raqib",meaning:"The Watchful"},
+  {number:44,name:"المجيب",transliteration:"Al-Mujib",meaning:"The Responsive"},
+  {number:45,name:"الواسع",transliteration:"Al-Wasi'",meaning:"The All-Encompassing"},
+  {number:46,name:"الحكيم",transliteration:"Al-Hakim",meaning:"The Wise"},
+  {number:47,name:"الودود",transliteration:"Al-Wadud",meaning:"The Loving"},
+  {number:48,name:"المجيد",transliteration:"Al-Majid",meaning:"The Glorious"},
+  {number:49,name:"الباعث",transliteration:"Al-Ba'ith",meaning:"The Resurrector"},
+  {number:50,name:"الشهيد",transliteration:"Ash-Shahid",meaning:"The Witness"},
+  {number:51,name:"الحق",transliteration:"Al-Haqq",meaning:"The Truth"},
+  {number:52,name:"الوكيل",transliteration:"Al-Wakil",meaning:"The Trustee"},
+  {number:53,name:"القوي",transliteration:"Al-Qawiyy",meaning:"The Strong"},
+  {number:54,name:"المتين",transliteration:"Al-Matin",meaning:"The Firm"},
+  {number:55,name:"الولي",transliteration:"Al-Waliyy",meaning:"The Friend"},
+  {number:56,name:"الحميد",transliteration:"Al-Hamid",meaning:"The Praiseworthy"},
+  {number:57,name:"المحصي",transliteration:"Al-Muhsi",meaning:"The Reckoner"},
+  {number:58,name:"المبدئ",transliteration:"Al-Mubdi'",meaning:"The Originator"},
+  {number:59,name:"المعيد",transliteration:"Al-Mu'id",meaning:"The Restorer"},
+  {number:60,name:"المحيي",transliteration:"Al-Muhyi",meaning:"The Giver of Life"},
+  {number:61,name:"المميت",transliteration:"Al-Mumit",meaning:"The Bringer of Death"},
+  {number:62,name:"الحي",transliteration:"Al-Hayy",meaning:"The Living"},
+  {number:63,name:"القيوم",transliteration:"Al-Qayyum",meaning:"The Self-Subsisting"},
+  {number:64,name:"الواجد",transliteration:"Al-Wajid",meaning:"The Perceiver"},
+  {number:65,name:"الماجد",transliteration:"Al-Majid",meaning:"The Noble"},
+  {number:66,name:"الواحد",transliteration:"Al-Wahid",meaning:"The One"},
+  {number:67,name:"الأحد",transliteration:"Al-Ahad",meaning:"The Unique"},
+  {number:68,name:"الصمد",transliteration:"As-Samad",meaning:"The Eternal"},
+  {number:69,name:"القادر",transliteration:"Al-Qadir",meaning:"The Able"},
+  {number:70,name:"المقتدر",transliteration:"Al-Muqtadir",meaning:"The Powerful"},
+  {number:71,name:"المقدم",transliteration:"Al-Muqaddim",meaning:"The Expediter"},
+  {number:72,name:"المؤخر",transliteration:"Al-Mu'akhkhir",meaning:"The Delayer"},
+  {number:73,name:"الأول",transliteration:"Al-Awwal",meaning:"The First"},
+  {number:74,name:"الأخر",transliteration:"Al-Akhir",meaning:"The Last"},
+  {number:75,name:"الظاهر",transliteration:"Az-Zahir",meaning:"The Manifest"},
+  {number:76,name:"الباطن",transliteration:"Al-Batin",meaning:"The Hidden"},
+  {number:77,name:"الوالي",transliteration:"Al-Wali",meaning:"The Governor"},
+  {number:78,name:"المتعالي",transliteration:"Al-Muta'ali",meaning:"The Most Exalted"},
+  {number:79,name:"البر",transliteration:"Al-Barr",meaning:"The Source of Goodness"},
+  {number:80,name:"التواب",transliteration:"At-Tawwab",meaning:"The Acceptor of Repentance"},
+  {number:81,name:"المنتقم",transliteration:"Al-Muntaqim",meaning:"The Avenger"},
+  {number:82,name:"العفو",transliteration:"Al-'Afuww",meaning:"The Pardoner"},
+  {number:83,name:"الرؤوف",transliteration:"Ar-Ra'uf",meaning:"The Kind"},
+  {number:84,name:"مالك الملك",transliteration:"Malik-ul-Mulk",meaning:"Owner of Sovereignty"},
+  {number:85,name:"ذو الجلال والإكرام",transliteration:"Dhul-Jalali wal-Ikram",meaning:"Lord of Majesty and Bounty"},
+  {number:86,name:"المقسط",transliteration:"Al-Muqsit",meaning:"The Equitable"},
+  {number:87,name:"الجامع",transliteration:"Al-Jami'",meaning:"The Gatherer"},
+  {number:88,name:"الغني",transliteration:"Al-Ghaniyy",meaning:"The Self-Sufficient"},
+  {number:89,name:"المغني",transliteration:"Al-Mughni",meaning:"The Enricher"},
+  {number:90,name:"المانع",transliteration:"Al-Mani'",meaning:"The Preventer"},
+  {number:91,name:"الضار",transliteration:"Ad-Darr",meaning:"The Distressor"},
+  {number:92,name:"النافع",transliteration:"An-Nafi'",meaning:"The Benefactor"},
+  {number:93,name:"النور",transliteration:"An-Nur",meaning:"The Light"},
+  {number:94,name:"الهادي",transliteration:"Al-Hadi",meaning:"The Guide"},
+  {number:95,name:"البديع",transliteration:"Al-Badi'",meaning:"The Incomparable"},
+  {number:96,name:"الباقي",transliteration:"Al-Baqi",meaning:"The Everlasting"},
+  {number:97,name:"الوارث",transliteration:"Al-Warith",meaning:"The Inheritor"},
+  {number:98,name:"الرشيد",transliteration:"Ar-Rashid",meaning:"The Guide to Right Path"},
+  {number:99,name:"الصبور",transliteration:"As-Sabur",meaning:"The Patient"}
+];
+function loadRandomAsma(){ let idx=Math.floor(Math.random()*asmaNames.length); let a=asmaNames[idx]; document.getElementById('asmaOutput').innerHTML=`<div class="asma-card"><div class="asma-number">${a.number}</div><div class="asma-arabic">${a.name}</div><div class="asma-transliteration">${a.transliteration}</div><div class="asma-meaning">${a.meaning}</div></div>`; }
+function loadAllAsma(){ let html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">'; asmaNames.forEach(a=>{ html+=`<div class="card" style="text-align:center;padding:16px;"><div style="font-size:11px;color:var(--text2);">${a.number}</div><div style="font-family:'Amiri';font-size:28px;color:var(--gold);direction:rtl;">${a.name}</div><div style="font-size:13px;font-style:italic;">${a.transliteration}</div><div style="font-size:12px;color:var(--text2);">${a.meaning}</div></div>`; }); html+='</div>'; document.getElementById('asmaOutput').innerHTML=html; }
+
+// =============================== MOON PHASE ===============================
+function renderMoon(){
+  let now=new Date(); let knownNew=new Date('2000-01-06T18:14:00Z'); let SYNODIC=29.530588853; let elapsed=(now-knownNew)/(1000*60*60*24); let phase=((elapsed%SYNODIC)+SYNODIC)%SYNODIC; let illumination=50*(1-Math.cos(2*Math.PI*phase/SYNODIC)); let pct=Math.round(illumination);
+  let phaseName,emoji; if(phase<1.85){phaseName='New Moon';emoji='🌑';} else if(phase<5.54){phaseName='Waxing Crescent';emoji='🌒';} else if(phase<9.22){phaseName='First Quarter';emoji='🌓';} else if(phase<12.91){phaseName='Waxing Gibbous';emoji='🌔';} else if(phase<16.61){phaseName='Full Moon';emoji='🌕';} else if(phase<20.30){phaseName='Waning Gibbous';emoji='🌖';} else if(phase<23.99){phaseName='Last Quarter';emoji='🌗';} else if(phase<27.68){phaseName='Waning Crescent';emoji='🌘';} else{phaseName='New Moon';emoji='🌑';}
+  let daysUntilFull=phase<14.77?(14.77-phase).toFixed(1):(SYNODIC-phase+14.77).toFixed(1); let daysUntilNew=phase>0.5?(SYNODIC-phase).toFixed(1):(0.5-phase).toFixed(1);
+  document.getElementById('moonOutput').innerHTML=`<div class="moon-display"><div class="moon-emoji">${emoji}</div><div class="moon-phase-name">${phaseName}</div><div class="moon-illumination">Illumination: <span>${pct}%</span></div></div><hr/><div><div class="info-pair"><span class="info-label">Lunar Day</span><span class="info-value">${phase.toFixed(1)} of 29.53</span></div><div class="info-pair"><span class="info-label">Days Until Full Moon</span><span class="info-value">${daysUntilFull} days</span></div><div class="info-pair"><span class="info-label">Days Until New Moon</span><span class="info-value">${daysUntilNew} days</span></div></div>`;
+}
+
+// =============================== GEO INFO (NOMINATIM OSM) ===============================
+async function getGeo(){
+  let addr=document.getElementById('geoAddress').value.trim(); if(!addr){ showToast('Enter address'); return; }
+  let out=document.getElementById('geoOutput'); out.innerHTML=loader();
+  try{ let res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}`); let data=await res.json(); if(!data.length) throw new Error('Not found');
+    let lat=data[0].lat; let lon=data[0].lon; let display=data[0].display_name;
+    out.innerHTML=`<div class="coord-display">📍 ${display}<br/>Lat: ${parseFloat(lat).toFixed(6)} &nbsp; Lon: ${parseFloat(lon).toFixed(6)}</div><div style="margin-top:12px;display:flex;gap:10px;"><button class="btn btn-sm" onclick="copyCoords('${lat}','${lon}')">Copy Coordinates</button><button class="btn-ghost btn-sm" onclick="applyToQibla('${lat}','${lon}')">→ Use for Qibla</button></div>`;
+  }catch(e){ out.innerHTML=errorBox('Address not found'); }
+}
+function copyCoords(lat,lon){ navigator.clipboard.writeText(`${lat}, ${lon}`).then(()=>showToast('Copied!')); }
+function applyToQibla(lat,lon){ document.getElementById('qiblaLat').value=lat; document.getElementById('qiblaLon').value=lon; showPanel('prayer'); showToast('Coordinates set. Click Calculate Qibla.'); }
+
+// =============================== INITIALIZE ===============================
+document.addEventListener('DOMContentLoaded',()=>{ loadSurahList(); renderMoon(); document.getElementById('qiblaLat').value='21.3891'; document.getElementById('qiblaLon').value='39.8579'; });
+</script>
+</body>
+</html>
